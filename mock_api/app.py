@@ -1,13 +1,23 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from urllib.parse import unquote
 
 from fastapi import FastAPI, HTTPException
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = json.loads((ROOT / "data" / "vendor_risk.json").read_text(encoding="utf-8"))
+
+
+def _data_file() -> Path:
+    # Honour the same PROCUREMENT_DATA_DIR override as the copilot so the eval
+    # harness can serve perturbed vendor-risk data without editing data/.
+    data_dir = Path(os.getenv("PROCUREMENT_DATA_DIR") or ROOT / "data")
+    return data_dir / "vendor_risk.json"
+
+
+DATA = json.loads(_data_file().read_text(encoding="utf-8"))
 
 app = FastAPI(title="FDE Mock Vendor Risk API", version="1.0")
 
