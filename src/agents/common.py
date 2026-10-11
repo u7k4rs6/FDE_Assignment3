@@ -125,5 +125,6 @@ OUTPUT RULES for submit_decision:
 - recommendation: a short label (under 15 words), e.g. "Route to manager for approval",
   "Request clarification before review", "Use existing licence; confirm gap before purchase".
 - next_step: 1-3 sentences naming who should do what (e.g. Security to verify repository controls).
+- Refer to people by name or role only; never use gendered pronouns (use "they" if needed).
 - Your added value is judgement: does an existing tool already meet the need (expansion of an existing
   licence vs a new competing tool, unused seats)? What exactly must each reviewer verify? What is ambiguous?"""

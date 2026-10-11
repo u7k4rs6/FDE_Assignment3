@@ -180,7 +180,7 @@ def finalize(*, request_id: str, architecture: str, runner: ToolRunner, policy: 
             actions.append("replaced LLM recommendation that asserted an approval/purchase (human authority, §11): "
                            f"{recommendation[:80]!r}")
             recommendation, next_step = rec_hint, step_hint
-        if floor_missing and not re.search(r"clarif|more info|missing|provide|supply|ask the requester", next_step, re.I):
+        if floor_missing and not re.search(r"clarif|more info|missing|provide|supply|ask the requester|return the request|obtain|request (?:the )?(?:annual|cost|user)", next_step, re.I):
             next_step = f"Ask the requester for: {'; '.join(floor_missing)}. " + next_step
             actions.append("prepended clarification request (floor has missing information)")
 
