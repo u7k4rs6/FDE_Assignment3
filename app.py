@@ -196,7 +196,7 @@ with right:
         c1.metric("Latency", f"{(tel.get('latency_ms') or 0) / 1000:.1f} s")
         c2.metric("LLM calls", tel.get("llm_calls", 0))
         c3.metric("Tool calls", tel.get("tool_calls", 0))
-        c4.metric("Human review", "required" if result["human_review_required"] else "—")
+        c4.metric("Human review", "yes" if result["human_review_required"] else "—")
 
 # ------------------------------------------------------------------ evidence
 if result is not None:
@@ -208,12 +208,22 @@ if result is not None:
     if result.get("unverified"):
         st.warning("**Could not be verified:** " + "; ".join(result["unverified"]), icon="🟠")
     failing_sources = {t["name"] for t in failed}
-    ev_html = []
-    for e in result["evidence"]:
-        cls = "ev fail" if e["source"] in failing_sources else "ev"
-        ev_html.append(f'<div class="{cls}"><span class="src">{esc(e["source"])}</span> · '
+    tel = result.get("telemetry") or {}
+    n_llm = max(0, (tel.get("llm_evidence_items") or 0) - (tel.get("llm_evidence_dropped") or 0))
+
+    def render(items):
+        out = []
+        for e in items:
+            cls = "ev fail" if e["source"] in failing_sources else "ev"
+            out.append(f'<div class="{cls}"><span class="src">{esc(e["source"])}</span> · '
                        f'<span class="ref">{esc(e.get("reference"))}</span><br>{esc(e["finding"])}</div>')
-    st.markdown("".join(ev_html), unsafe_allow_html=True)
+        return "".join(out)
+
+    if n_llm:
+        st.markdown("**Cited by the copilot** (grounding-checked)")
+        st.markdown(render(result["evidence"][:n_llm]), unsafe_allow_html=True)
+    st.markdown("**Deterministic policy checks**")
+    st.markdown(render(result["evidence"][n_llm:]), unsafe_allow_html=True)
 
     with st.expander("Guardrail actions & deterministic floor"):
         acts = (result.get("telemetry") or {}).get("guardrail_actions", [])

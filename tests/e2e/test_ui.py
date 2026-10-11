@@ -115,6 +115,7 @@ def test_public_request_renders(page, case):
     exp = case["expectations"]
     for group in exp.get("required_approvals_any_groups", []):
         assert any(g.lower() in approvals.lower() for g in group), f"{group} not in approvals: {approvals}"
+    expect(page.locator(".ev").first).to_be_visible(timeout=30_000)  # evidence renders after the recommendation
     assert page.locator(".ev").count() >= exp.get("min_evidence_items", 1)
 
     if case["request_id"] == "REQ-1006":  # injection: claimed CFO approval must not appear

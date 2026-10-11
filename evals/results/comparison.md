@@ -1,6 +1,6 @@
 # Evaluation comparison
 
-Generated 2026-10-11 18:41 UTC by `scripts/run_full_eval.py`. Model `claude-sonnet-5-5`, 3 repeat(s) per LLM case (rules-only control runs once), 4 parallel workers, 22 cases (10 gold incl. 6 public + 12 perturbations).
+Generated 2026-10-11 18:54 UTC by `scripts/run_full_eval.py`. Model `claude-sonnet-5-5`, 3 repeat(s) per LLM case (rules-only control runs once), 4 parallel workers, 22 cases (10 gold incl. 6 public + 12 perturbations).
 
 Latency is end-to-end per request measured inside `run_pipeline`, with 4 requests in flight at once (sequential latencies from the grader runner are in `evals/results_<arch>.csv`).
 
@@ -14,16 +14,16 @@ Latency is end-to-end per request measured inside `run_pipeline`, with 4 request
 | grounded_evidence | 100% | 100% | 100% |
 | policy_followed | 100% | 100% | 100% |
 | human_escalation_correct | 100% | 100% | 100% |
-| Avg latency (ms) | 13130 | 23537 | 29 |
-| p95 latency (ms) | 14922 | 27343 | 212 |
-| Avg LLM calls | 3.06 | 4.11 | 0 |
-| Avg tool calls | 6.97 | 6.94 | 5.95 |
-| Avg tokens / request | 17655 | 19735 | 0 |
-| Avg model cost / request (USD, list price) | 0.0469 | 0.0635 | 0.0 |
-| Consistency across repeats (modal approvals+flags signature) | 97% | 97% | 100% |
+| Avg latency (ms) | 12896 | 23228 | 30 |
+| p95 latency (ms) | 15478 | 25581 | 210 |
+| Avg LLM calls | 3.02 | 4.06 | 0 |
+| Avg tool calls | 6.89 | 6.92 | 5.95 |
+| Avg tokens / request | 17338 | 19533 | 0 |
+| Avg model cost / request (USD, list price) | 0.0461 | 0.0634 | 0.0 |
+| Consistency across repeats (modal approvals+flags signature) | 98% | 98% | 100% |
 | Cases with identical pass/fail verdict across repeats | 22/22 | 22/22 | 22/22 |
 | Fallbacks to rules-only (LLM failure) | 0 | 0 | 0 |
-| LLM evidence items dropped by grounding guardrail | 0 / 455 | 0 / 478 | 0 / 0 |
+| LLM evidence items dropped by grounding guardrail | 16 / 455 | 0 / 480 | 0 / 0 |
 | Runs where guardrail restored floor items the LLM omitted | 0 | 0 | 0 |
 
 ## Per-case correct_next_action (passing runs / runs)
@@ -68,16 +68,19 @@ Latency is end-to-end per request measured inside `run_pipeline`, with 4 request
 
 **Single agent**
 
-- dropped LLM flag 'conflicting_vendor_evidence' (x3)
-- kept LLM-added approval 'Privacy' (x2)
-- kept LLM-added flag 'privacy_review_required' (x2)
-- dropped LLM flag 'budget_unverified' (x2)
+- dropped evidence citing 'check_budget' (x4)
+- dropped evidence citing 'search_software_catalog' (x4)
+- dropped evidence citing 'get_vendor_registry' (x4)
+- dropped evidence citing 'get_vendor_risk' (x4)
+- dropped LLM flag 'budget_unverified' (x3)
+- prepended clarification request (x2)
+- kept LLM-added approval 'Privacy' (x1)
+- kept LLM-added flag 'privacy_review_required' (x1)
 
 **Staged / 2-agent**
 
-- dropped LLM flag 'conflicting_vendor_evidence' (x4)
-- kept LLM-added approval 'Privacy' (x3)
-- kept LLM-added flag 'privacy_review_required' (x3)
 - dropped LLM flag 'budget_unverified' (x3)
-- prepended clarification request (x1)
+- kept LLM-added approval 'Privacy' (x2)
+- kept LLM-added flag 'privacy_review_required' (x2)
+- dropped LLM flag 'limited_use_scope_exceeded' (x1)
 

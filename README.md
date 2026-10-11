@@ -189,11 +189,67 @@ Director of the requester's department, otherwise *unresolved*, never guessed).
 
 ## Evaluation
 
-<!-- RESULTS -->
+Two layers, both reproducible.
+
+### Grader's public runner
+
+`evals/run_public_evals.py` (unchanged), run sequentially on the final code:
+
+| Arch | Passed | Avg latency | LLM calls | Tool calls |
+|---|---:|---:|---:|---:|
+| single | **6/6** | 12.9 s | 3–4 | 7 |
+| staged | **6/6** | 23.8 s | 4–5 | 7 |
+
+CSVs: [`evals/results_single.csv`](evals/results_single.csv), [`evals/results_staged.csv`](evals/results_staged.csv).
+
+### Full eval
+
+`scripts/run_full_eval.py`: 22 cases, the same set for every arch. That's the 6 public cases, gold labels
+for the other 4 requests ([`evals/gold_cases.json`](evals/gold_cases.json)), and 12 perturbations
+   ([`evals/perturbations.py`](evals/perturbations.py)) that run against modified temp copies of `data/` through
+`PROCUREMENT_DATA_DIR` (threshold boundaries, injection in vendor/API notes, API down for a clean vendor, 365 vs
+366-day reviews, vendor missing from the registry, unknown employee, department with no budget row). LLM archs ran 3×
+each; the rules-only control is a no-LLM baseline.
+
+| Metric | Single | Staged / 2-agent | Rules-only control |
+|---|---:|---:|---:|
+| Public cases meeting minimum expectations | 18/18 runs | 18/18 runs | 6/6 |
+| Runs passing all 4 criteria (next action, grounding, policy, escalation) | **100%** (66) | **100%** (66) | 82% (22) |
+| Cases passing every repeat | 22/22 | 22/22 | 18/22 |
+| Avg / p95 latency (4 requests in flight) | **12.9 s** / 15.5 s | 23.2 s / 25.6 s | 0.03 s |
+| Avg LLM calls | **3.0** | 4.1 | 0 |
+| Avg tool calls | 6.9 | 6.9 | 6.0 |
+| Avg tokens · cost per request | 17.3k · **$0.046** | 19.5k · $0.063 | 0 |
+| Consistency across repeats | 98% | 98% | 100% |
+| LLM evidence dropped by grounding guardrail | 16 / 455 | 0 / 480 | — |
+| Runs where the guardrail had to restore floor items | 0 | 0 | — |
+| Policy failures found manually | 0 | 0 (+1 pronoun slip) | 0 |
+
+Full output: [`evals/results/comparison.md`](evals/results/comparison.md), per-run CSVs
+`evals/results/results_{single,staged,rules}.csv` (template columns + extras), raw runs in `evals/results/runs.jsonl`,
+manual review in [`evals/results/manual_review.md`](evals/results/manual_review.md).
+
+How it's scored (`evals/scoring.py`):
+- **correct_next_action:** gold approvals present, no over-escalation, gold flags present, no forbidden flags, missing-info groups covered, and the recommendation/next step mentions the right action (e.g. "existing TaskFlow licence").
+- **grounded_evidence:** every evidence source is a tool that ran, and every number appears in tool output or the policy.
+- **policy_followed:** the output contains the deterministic floor, with no forbidden flags or approvals.
+- **human_escalation_correct:** `human_review_required` is true, and every gold review (Finance/CFO/Security/Privacy/Legal) is present with none unwarranted.
+
+What the evals turned up:
+- **Engine gap, caught by the LLM.** In run 1, both archs flagged `conflicting_vendor_evidence` 6/6 when a vendor was missing from the registry but known to the API. The engine didn't, so the guardrail dropped a correct flag. I moved the rule into code and re-ran; the numbers above are run 2. Run 1 is kept in `evals/results/history/`.
+- **Single-agent shortcut.** In 4/66 runs, single skipped the raw data tools, went straight to `evaluate_policy`, and then cited the data tools anyway. The grounding guardrail dropped those 16 items; the deterministic findings kept the evidence complete and the verdicts correct.
+- **The LLM's real value is judgement.** The rules-only control gets every approval and flag right but misses the "what to do" on 4 cases: confirm the gap vs PixelCraft/CreativeSuite, check repository controls, use the existing TaskFlow licence, clarify one-time vs annual.
+- **Only inconsistency:** BrandBoard. The LLM sometimes adds Privacy because the vendor-risk API says the vendor processes personal data, even though the request's data level doesn't involve PII.
 
 ## Architecture comparison and ship decision
 
-<!-- DECISION -->
+**Ship the single agent.** It matches staged on every quality metric (22/22 cases, every repeat) and is about 45% faster
+(12.9 s vs 23.8 s), about 27% cheaper, and one prompt simpler. Staged's only edge is cleaner evidence attribution, and the
+shared guardrail already enforces that. The safety-critical parts (thresholds, the policy floor, code-owned approvals,
+grounding, fallback) live in code and are identical for both, so a second agent adds cost without adding control.
+
+Full memo (≤500 words, test-enforced): [`docs/architecture_decision.md`](docs/architecture_decision.md).
+Tools, handoffs and stop conditions: [`docs/workflow_notes.md`](docs/workflow_notes.md).
 
 ## Known limitations
 
@@ -206,6 +262,7 @@ Director of the requester's department, otherwise *unresolved*, never guessed).
   by the perturbation set.
 - Latency in the full eval was measured with several requests in flight at once; the grader runner's
   sequential timings are reported separately.
+- Prompted wording rules aren't guaranteed. One staged run (out of 132 LLM runs) used a gendered pronoun for a requester despite the "name or role only" rule.
 - The audit log is local JSONL with no authentication. The approver directory only knows Directors
   (no named CFO, Finance or Security people), so those approvals show as review queues.
 
