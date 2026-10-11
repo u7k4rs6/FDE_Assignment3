@@ -307,3 +307,12 @@ def test_evaluate_does_not_mutate_bundle():
     snapshot = copy.deepcopy(b)
     run(b)
     assert b == snapshot
+
+
+def test_unknown_requester_budget_not_assumed():
+    b = make_bundle()
+    b["context"]["requester"] = None
+    b.pop("budget")
+    r = run(b)
+    assert any("requester" in m for m in r.missing_information)
+    assert "budget_unverified" in r.risk_flags and "Finance" in r.required_approvals

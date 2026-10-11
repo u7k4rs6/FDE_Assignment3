@@ -299,6 +299,12 @@ def evaluate(bundle: dict, ref_date: date) -> PolicyResult:
         r.find("check_budget", budget.get("reason", "Department budget could not be verified."), "Policy §2, §10")
     elif cost is None:
         r.unverified.append("budget fit (annual cost missing)")
+    else:  # no department known (e.g. requester not in directory): budget cannot be checked
+        r.approve("Finance", "Department budget could not be checked (requester department unknown).", "§2, §10")
+        r.flag("budget_unverified", "Requester department unknown; budget not checked.", "§2, §10")
+        r.unverified.append("department software budget")
+        r.find("evaluate_policy", "Budget could not be checked because the requester's department is unknown; "
+               "no favourable budget status is assumed.", "Policy §2, §10")
 
     # ---------------- vendor evidence (registry + API) -----------------------
     vendor = req.get("vendor_name")

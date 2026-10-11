@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "generated": "2026-10-11 18:29 UTC",
+    "model": "claude-sonnet-5-5",
+    "repeats": 1,
+    "workers": 4,
+    "n_cases": 22,
+    "n_gold": 10,
+    "n_pert": 12,
+    "wall_seconds": 8
+  },
+  "summary": {
+    "rules": {
+      "arch": "rules",
+      "runs": 22,
+      "cases": 22,
+      "all_criteria": "82%",
+      "cases_all_runs_pass": 18,
+      "correct_next_action": "82%",
+      "action_text_ok": "82%",
+      "grounded_evidence": "100%",
+      "policy_followed": "100%",
+      "human_escalation_correct": "100%",
+      "public_minimum": "100%",
+      "public_runs": 6,
+      "avg_latency_ms": 44,
+      "p95_latency_ms": 225,
+      "avg_llm_calls": 0,
+      "avg_tool_calls": 5.95,
+      "avg_tokens": 0,
+      "avg_cost_usd": 0.0,
+      "consistency": "100%",
+      "stable_verdict": "22/22",
+      "fallbacks": 0,
+      "evidence_dropped": 0,
+      "evidence_proposed": 0,
+      "runs_with_floor_restored": 0
+    }
+  }
+}

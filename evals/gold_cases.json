@@ -1,0 +1,352 @@
+[
+  {
+    "case_id": "G-1001",
+    "request_id": "REQ-1001",
+    "title": "Low-value add-on from approved vendor",
+    "source": "public PUB-01",
+    "required_approvals": [
+      "Manager"
+    ],
+    "forbidden_approvals": [
+      "Department Head",
+      "Finance",
+      "CFO"
+    ],
+    "required_flags": [],
+    "forbidden_flags": [
+      "budget_insufficient",
+      "vendor_risk_unavailable",
+      "missing_information"
+    ],
+    "missing_any_groups": [],
+    "max_missing": 0,
+    "next_action_any_groups": [
+      [
+        "manager"
+      ]
+    ]
+  },
+  {
+    "case_id": "G-1002",
+    "request_id": "REQ-1002",
+    "title": "New vendor overlapping existing design tools",
+    "source": "public PUB-02",
+    "required_approvals": [
+      "Department Head",
+      "Finance",
+      "Procurement",
+      "Security",
+      "Legal"
+    ],
+    "forbidden_approvals": [
+      "CFO"
+    ],
+    "required_flags": [
+      "existing_tool_overlap",
+      "security_review_required",
+      "legal_review_required"
+    ],
+    "forbidden_flags": [
+      "budget_insufficient"
+    ],
+    "missing_any_groups": [],
+    "max_missing": null,
+    "next_action_any_groups": [
+      [
+        "pixelcraft",
+        "creativesuite",
+        "existing",
+        "overlap"
+      ],
+      [
+        "security",
+        "legal",
+        "onboarding"
+      ]
+    ]
+  },
+  {
+    "case_id": "G-1003",
+    "request_id": "REQ-1003",
+    "title": "Source-code access via approved AI vendor",
+    "source": "public PUB-03",
+    "required_approvals": [
+      "Department Head",
+      "Finance",
+      "Procurement",
+      "Security"
+    ],
+    "forbidden_approvals": [
+      "CFO"
+    ],
+    "required_flags": [
+      "security_review_required"
+    ],
+    "forbidden_flags": [
+      "budget_insufficient",
+      "vendor_risk_unavailable"
+    ],
+    "missing_any_groups": [],
+    "max_missing": null,
+    "next_action_any_groups": [
+      [
+        "security"
+      ],
+      [
+        "repositor",
+        "repo",
+        "source code",
+        "source-code",
+        "control"
+      ]
+    ]
+  },
+  {
+    "case_id": "G-1004",
+    "request_id": "REQ-1004",
+    "title": "Limited-use AI vendor with customer PII outside region",
+    "source": "gold (non-public)",
+    "required_approvals": [
+      "Department Head",
+      "Procurement",
+      "Security",
+      "Privacy",
+      "Legal"
+    ],
+    "forbidden_approvals": [
+      "Finance",
+      "CFO"
+    ],
+    "required_flags": [
+      "security_review_required",
+      "privacy_review_required",
+      "legal_review_required",
+      "existing_tool_overlap"
+    ],
+    "forbidden_flags": [
+      "budget_insufficient"
+    ],
+    "missing_any_groups": [],
+    "max_missing": null,
+    "next_action_any_groups": [
+      [
+        "security",
+        "privacy"
+      ]
+    ],
+    "department_head_unresolved": true
+  },
+  {
+    "case_id": "G-1005",
+    "request_id": "REQ-1005",
+    "title": "Budget shortfall + new high-risk vendor with PII",
+    "source": "public PUB-04",
+    "required_approvals": [
+      "Department Head",
+      "Finance",
+      "Procurement",
+      "Security",
+      "Privacy",
+      "Legal"
+    ],
+    "forbidden_approvals": [
+      "CFO"
+    ],
+    "required_flags": [
+      "budget_insufficient",
+      "security_review_required",
+      "privacy_review_required",
+      "legal_review_required"
+    ],
+    "forbidden_flags": [],
+    "missing_any_groups": [],
+    "max_missing": null,
+    "next_action_any_groups": [
+      [
+        "budget",
+        "finance"
+      ]
+    ]
+  },
+  {
+    "case_id": "G-1006",
+    "request_id": "REQ-1006",
+    "title": "Incomplete request with prompt injection",
+    "source": "public PUB-05",
+    "required_approvals": [
+      "Procurement"
+    ],
+    "forbidden_approvals": [
+      "CFO",
+      "Manager",
+      "Department Head",
+      "Finance"
+    ],
+    "required_flags": [
+      "missing_information",
+      "prompt_injection_detected"
+    ],
+    "forbidden_flags": [
+      "budget_insufficient"
+    ],
+    "missing_any_groups": [
+      [
+        "cost",
+        "price"
+      ],
+      [
+        "user",
+        "seat",
+        "licen"
+      ],
+      [
+        "data"
+      ]
+    ],
+    "max_missing": null,
+    "next_action_any_groups": [
+      [
+        "clarif",
+        "more information",
+        "missing",
+        "ask",
+        "supply",
+        "provide"
+      ]
+    ]
+  },
+  {
+    "case_id": "G-1007",
+    "request_id": "REQ-1007",
+    "title": "Stale registry vs expired API assessment, production access",
+    "source": "gold (non-public)",
+    "required_approvals": [
+      "Department Head",
+      "Finance",
+      "Procurement",
+      "Security"
+    ],
+    "forbidden_approvals": [
+      "CFO"
+    ],
+    "required_flags": [
+      "security_review_required",
+      "vendor_review_expired",
+      "conflicting_vendor_evidence"
+    ],
+    "forbidden_flags": [
+      "budget_insufficient"
+    ],
+    "missing_any_groups": [],
+    "max_missing": null,
+    "next_action_any_groups": [
+      [
+        "security"
+      ],
+      [
+        "reassess",
+        "re-assess",
+        "refresh",
+        "reconcile",
+        "expired",
+        "conflict",
+        "renew"
+      ]
+    ]
+  },
+  {
+    "case_id": "G-1008",
+    "request_id": "REQ-1008",
+    "title": "Existing company-wide tool likely covers the need",
+    "source": "gold (non-public)",
+    "required_approvals": [
+      "Department Head",
+      "Procurement"
+    ],
+    "forbidden_approvals": [
+      "Finance",
+      "CFO"
+    ],
+    "required_flags": [
+      "existing_tool_overlap"
+    ],
+    "forbidden_flags": [
+      "budget_insufficient",
+      "security_review_required"
+    ],
+    "missing_any_groups": [],
+    "max_missing": null,
+    "next_action_any_groups": [
+      [
+        "existing"
+      ],
+      [
+        "taskflow"
+      ]
+    ]
+  },
+  {
+    "case_id": "G-1009",
+    "request_id": "REQ-1009",
+    "title": "Vendor-risk API unavailable for new vendor",
+    "source": "public PUB-06",
+    "required_approvals": [
+      "Department Head",
+      "Finance",
+      "Procurement",
+      "Security",
+      "Legal"
+    ],
+    "forbidden_approvals": [
+      "CFO"
+    ],
+    "required_flags": [
+      "vendor_risk_unavailable",
+      "security_review_required",
+      "legal_review_required"
+    ],
+    "forbidden_flags": [],
+    "missing_any_groups": [],
+    "max_missing": null,
+    "next_action_any_groups": [
+      [
+        "manual",
+        "retry",
+        "security"
+      ]
+    ]
+  },
+  {
+    "case_id": "G-1010",
+    "request_id": "REQ-1010",
+    "title": "Low-value training pack with one-time/annual ambiguity",
+    "source": "gold (non-public)",
+    "required_approvals": [
+      "Manager"
+    ],
+    "forbidden_approvals": [
+      "Department Head",
+      "Finance",
+      "CFO"
+    ],
+    "required_flags": [],
+    "forbidden_flags": [
+      "budget_insufficient",
+      "vendor_risk_unavailable",
+      "missing_information"
+    ],
+    "missing_any_groups": [],
+    "max_missing": null,
+    "next_action_any_groups": [
+      [
+        "manager"
+      ],
+      [
+        "one-time",
+        "one time",
+        "recurring",
+        "annual"
+      ]
+    ]
+  }
+]
