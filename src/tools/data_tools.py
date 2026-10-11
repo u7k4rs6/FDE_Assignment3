@@ -63,8 +63,8 @@ def get_request_context(request_id: str, ctx: ToolContext | None = None) -> dict
             notes.append("Requester has no manager on record; Manager approver is unresolved.")
         dept = requester.get("department")
         # Department Head = a Director *of the requester's own department*.
-        # Managers can sit in other departments (e.g. a Go To Market director
-        # managing Sales and Customer Success), so the manager is NOT assumed
+        # Managers can sit in other departments (e.g. a director of one org
+        # managing reports in two other departments), so the manager is NOT assumed
         # to be the department head.
         directors = [e for e in employees if e.get("department") == dept and _norm(e.get("level")) == "director"]
         if len(directors) == 1:

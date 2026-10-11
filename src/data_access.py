@@ -14,7 +14,7 @@ from src.config import ROOT, data_dir  # noqa: F401  (ROOT kept for backwards co
 
 
 def _read_csv(name: str) -> pd.DataFrame:
-    # dtype=str keeps IDs like "E007" intact and avoids float coercion of
+    # dtype=str keeps zero-padded IDs intact and avoids float coercion of
     # integer columns that contain blanks; numbers are parsed explicitly later.
     return pd.read_csv(data_dir() / name, dtype=str, keep_default_na=True)
 
