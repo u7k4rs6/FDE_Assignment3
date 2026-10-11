@@ -389,6 +389,16 @@ def evaluate(bundle: dict, ref_date: date) -> PolicyResult:
             r.find("evaluate_policy", f"Registry and vendor-risk service disagree for {vendor} ({'; '.join(diffs)}). "
                    "Neither source is silently preferred; Security must reconcile.", "Policy §5")
 
+    # Registry has no record of a vendor that the vendor-risk service has assessed:
+    # the two sources disagree about whether the vendor is known/assessed.
+    if registry.get("status") == "not_found" and risk_ok:
+        detail = (f"registry has no record of {vendor} but the vendor-risk service reports review status "
+                  f"{risk_rec.get('security_review_status')} ({risk_rec.get('last_review_date') or 'no date'})")
+        r.flag("conflicting_vendor_evidence", detail, "§5")
+        security_reasons.append("registry and vendor-risk service disagree")
+        r.find("evaluate_policy", f"Registry and vendor-risk service disagree: {detail}. Neither source is silently "
+               "preferred; Security and Procurement must reconcile the vendor record.", "Policy §5")
+
     # ---------------- §5 security -------------------------------------------
     data = classify_data_level(req.get("data_access_level"))
     integ = classify_integrations(integrations)

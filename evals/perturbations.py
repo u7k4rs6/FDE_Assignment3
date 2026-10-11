@@ -118,7 +118,7 @@ PERTURBATIONS = [
          ["vendor_review_expired", "conflicting_vendor_evidence", "security_review_required"]),
     case("P-VENDOR-NOT-IN-REGISTRY", "REQ-1001", "Vendor missing from internal registry",
          drop_vendor("SignFlow"), ["Manager", "Security", "Legal"], [DH, "Finance", "CFO"],
-         ["security_review_required", "legal_review_required"]),
+         ["security_review_required", "legal_review_required", "conflicting_vendor_evidence"]),
     case("P-UNKNOWN-EMPLOYEE", "REQ-1008", "Requester not in employee directory",
          set_request("requester_id", "E999"), [DH, "Procurement", "Finance"], ["CFO"],
          ["missing_information", "budget_unverified"], missing=[["requester"]]),

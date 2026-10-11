@@ -195,6 +195,7 @@ def test_vendor_absent_from_registry_is_new_vendor():
     b["registry"] = {"status": "not_found", "is_new_vendor": True, "reason": "not in registry"}
     r = run(b)
     assert {"Security", "Legal"} <= set(r.required_approvals)
+    assert "conflicting_vendor_evidence" in r.risk_flags  # API knows a vendor the registry does not
 
 
 # ---------------------------------------------------------------- §7 legal (>= 10000 vs Finance's > 10000)
