@@ -10,3 +10,6 @@ data/runtime/
 test-results/
 # NOTE: the starter pack ignored evals/results_*.csv, which hid the eval
 # results the brief asks us to submit. Results are now committed.
+# Local working notes (not part of the submission)
+CLAUDE.md
+KICKOFF_PROMPT.md
